@@ -21,7 +21,7 @@ Navigate to grafana.com, click your account to log in and lookup the userid valu
 
 Reference https://grafana.com/docs/grafana-cloud/security-and-account-management/authentication-and-permissions/access-policies/create-access-policies/ for steps on how to create an access policy. You need to add the `adaptive-logs:admin` scope before generating a token. 
 
-<image placeholder>
+![Access Policy with adaptivelogs:admin scope Screenshot](images/accessPolicyWithAdaptiveLogsAdminScope.jpg)
 
 Run this command to extract the Adaptive Logs Recommendations JSON outputs and convert them into CSV format. 
 
