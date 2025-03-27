@@ -1,0 +1,4 @@
+# Ignore CSV and JSON files starting with 'api'
+api*.csv
+api*.json
+enviro*.csv
