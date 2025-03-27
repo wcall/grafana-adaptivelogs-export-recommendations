@@ -17,13 +17,16 @@ fi
 # Function to process a single environment
 process_environment() {
   local ENV_NAME=$1
-  local USER_ID=$2
-  local TOKEN=$3
+  local LOGS_URL="$2/adaptive-logs/recommendations"
+  local USER_ID=$3
+  local TOKEN=$4
+  
 
   echo "Processing environment: $ENV_NAME"
+  echo "LOGS_URL: $LOGS_URL"
 
   # Perform the API request
-  curl -u "$USER_ID:$TOKEN" -X GET "https://logs-prod-017.grafana.net/adaptive-logs/recommendations" > "${ENV_NAME}_recs.json"
+  curl -u "$USER_ID:$TOKEN" -X GET "$LOGS_URL" > "${ENV_NAME}_recs.json"
 
   # Process the JSON response
   python3 prettify-json.py "${ENV_NAME}_recs.json"
@@ -40,14 +43,18 @@ if [ "$#" -eq 2 ]; then
     exit 1
   fi
 
-  USER_ID=$(echo "$CREDENTIALS" | cut -d',' -f2)
-  TOKEN=$(echo "$CREDENTIALS" | cut -d',' -f3)
+  LOGS_URL=$(echo "$CREDENTIALS" | cut -d',' -f2)
+  USER_ID=$(echo "$CREDENTIALS" | cut -d',' -f3)
+  TOKEN=$(echo "$CREDENTIALS" | cut -d',' -f4)
+
+  echo "LOGS_URL: $LOGS_URL"
 
   # Process the specified environment
-  process_environment "$ENV_NAME" "$USER_ID" "$TOKEN"
+  process_environment "$ENV_NAME" "$LOGS_URL" "$USER_ID" "$TOKEN"
 else
   # Process all environments in the lookup file
-  while IFS=',' read -r ENV_NAME USER_ID TOKEN; do
-    process_environment "$ENV_NAME" "$USER_ID" "$TOKEN"
+  while IFS=',' read -r ENV_NAME LOGS_URL USER_ID TOKEN; do
+    echo "in while loop,LOGS_URL: $LOGS_URL"
+    process_environment "$ENV_NAME" "$LOGS_URL" "$USER_ID" "$TOKEN"
   done < "$LOOKUP_FILE"
 fi
