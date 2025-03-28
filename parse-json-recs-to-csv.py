@@ -14,7 +14,7 @@ def format_bytes(size):
     return '%.1f' % size + power_labels[n] + 'B'
 
 def format_gb(size):
-    return '%.2f' % (size / 1024 / 1024 / 1024)
+    return '%.12f' % (size / 1024 / 1024 / 1024)
 
 def format_query_frequency(qf):
     if qf == 0.0:
@@ -29,10 +29,11 @@ def format_query_frequency(qf):
         return 'always'
 
 # Check if the JSON file name is provided as an argument
-if len(sys.argv) != 2:
-    print("Usage: python3 parse-json-recs-to-csv.py <json_file>")
+if len(sys.argv) != 3:
+    print("Usage: python3 parse-json-recs-to-csv.py <json_file> <price_per_gb>")
     sys.exit(1)
 
+price_per_gb = float(sys.argv[2])
 json_file_name = sys.argv[1]
 csv_file_name = json_file_name.replace('.json', '.csv')
 
@@ -97,8 +98,8 @@ with open(csv_file_name, 'w', newline='') as csv_file:
                 service_data['Volume'],
                 format_bytes(service_data['Volume']),
                 service_data['Count'],
-                recommended_drop_rate * service_data['Volume'],
+                recommended_drop_rate / 100.0 * service_data['Volume'],
                 format_bytes(recommended_drop_rate / 100.0 * service_data['Volume']),
                 format_gb(recommended_drop_rate / 100.0 * service_data['Volume']),
-                0.24 * (recommended_drop_rate / 100.0 * service_data['Volume']) / 1024 / 1024 / 1024
+                price_per_gb * float(format_gb(recommended_drop_rate / 100.0 * service_data['Volume']))
             ])

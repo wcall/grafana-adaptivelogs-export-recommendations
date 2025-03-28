@@ -1,12 +1,23 @@
 #!/bin/bash
 
-# Usage: ./adaptivelogs-export.sh <lookup_file> [<environment_name>]
-if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
-  echo "Usage: $0 <lookup_file> [<environment_name>]"
+# Usage: ./adaptivelogs-export.sh <lookup_file> [<price_per_gb>] [<environment_name>]  
+if [ "$#" -lt 1 ] || [ "$#" -gt 3 ]; then
+  echo "Usage: $0 <lookup_file> [<price_per_gb>] [<environment_name>]"
   exit 1
 fi
 
 LOOKUP_FILE=$1
+
+# Check if the price per GB is provided
+# Defaulting my price per GB to 0.24, but you can change it by providing the value as the second argument
+# Example: ./adaptivelogs-export.sh environment-authcredentials.csv 0.65 
+if [ $2  ]; then
+  PRICE_PER_GB=$2
+  echo "Price per GB: $PRICE_PER_GB"
+else
+  PRICE_PER_GB=0.24
+  echo "Price per GB: $PRICE_PER_GB"
+fi
 
 # Check if the lookup file exists
 if [ ! -f "$LOOKUP_FILE" ]; then
@@ -30,7 +41,8 @@ process_environment() {
 
   # Process the JSON response
   python3 prettify-json.py "${ENV_NAME}_recs.json"
-  python3 parse-json-recs-to-csv.py "${ENV_NAME}_recs.json"
+  # Pass the price per GB as an argument to the script
+  python3 parse-json-recs-to-csv.py "${ENV_NAME}_recs.json" $PRICE_PER_GB
 }
 
 if [ "$#" -eq 2 ]; then
