@@ -1,4 +1,4 @@
-# Ignore CSV and JSON files starting with 'api'
-aci*.csv
-aci*.json
-enviro*.csv
+# Ignore CSV and JSON files except for the dummy files
+*.json
+*.csv
+!dummy*.csv
