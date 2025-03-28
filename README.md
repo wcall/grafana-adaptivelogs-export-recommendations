@@ -23,10 +23,14 @@ Reference https://grafana.com/docs/grafana-cloud/security-and-account-management
 
 ![Access Policy with adaptivelogs:admin scope Screenshot](images/accessPolicyWithAdaptiveLogsAdminScope.jpg)
 
-Run this command to extract the Adaptive Logs Recommendations JSON outputs and convert them into CSV format. 
+Run any variation of these commands to extract the Adaptive Logs Recommendations JSON outputs and convert them into CSV format. 
 
 ```bash
   ./adaptivelogs-export.sh environment-authcredentials.csv 
+
+  ./adaptivelogs-export.sh environment-authcredentials.csv 0.65
+
+  ./adaptivelogs-export.sh environment-authcredentials.csv <yourCombinedPricePerGBForIngestAndRetention> <yourSlugName>-logs
 ```
 
 ## Authors
